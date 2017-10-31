@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="menu/layout">
+    <head>
+        <title>Soutien</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <body>
+        <h2 layout:fragment="h2title">Nouveau soutien</h2>
+        <div layout:fragment="content" class="x_content" ng-controller="coachCreneauController">
+
+            <form class="row" ng-submit="registerCreneauByCoach();">
+                <div ng-show="error === true" class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Erreur! &nbsp;</strong> {{errormsg}}
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">Promotion : </label>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-university"></i></div>
+                        <select ng-change="onPromotionChange();" class="form-control" ng-options="p.codePromotion for p in promotions"
+                                ng-model="filterPromotionCondition.promotion">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">Matières: </label>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-book"></i></div>
+                        <select class="form-control" ng-options="m.codeMatiere for m in matieres"
+                                ng-model="filterMatiereCondition.matiere">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">Date Heure début: </label>
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' id="datedeb" required="true" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">Date Heure fin: </label>
+                    <div class='input-group'>
+                        <div class="input-group-addon"><i class="fa fa-hourglass-1"></i></div>
+                        <select ng-change="displayElements();" class="form-control" required="true" ng-options="s.name for s in data.availableCreneaux track by s.id"
+                                ng-model="data.selectedCreneau">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <button  ng-submit="registerCreneauByCoach();" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+
+
+    </body>
+</html>

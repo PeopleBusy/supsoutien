@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="menu/layout">
+    <head>
+        <title>Liste des utilisateurs</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <body>
+        <h2 layout:fragment="h2title">Liste des utilisateurs</h2>
+
+        <div layout:fragment="content" class="x_content table-responsive" ng-controller="listUsersController">          
+
+            <div ng-show="error2 === true" class="alert alert-danger alert-dismissible col-md-12" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Erreur! &nbsp;</strong> {{errormsg}}
+            </div>
+
+            <div class="title_right">
+                <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right">
+                    <button ng-click="actualiserListe();" class="btn btn-primary" type="button">Actualiser la liste</button>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-12 form-group pull-right top_search">
+                    <form ng-submit="rechercherUserByIdBooster();">
+                        <div class="input-group">
+                            <input type="number" ng-model="idBooster" class="form-control" placeholder="Recherche par Id bosster"/>
+                            <span class="input-group-btn">
+                                <button ng-submit="rechercherUserByIdBooster();" class="btn btn-default" type="submit">Ok</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-left">
+                    <select ng-change="displayElements();" class="form-control" ng-options="s.name for s in data.availableOptions track by s.id"
+                            ng-model="data.selectedOption">
+                    </select>
+                </div>
+
+            </div>
+
+            <div ng-show="error === true" class="alert alert-success alert-dismissible col-md-12" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Réussi! &nbsp;</strong> {{errormsg}}
+            </div>
+
+            <table id="" class="table table-striped responsive-utilities jambo_table bulk_action">
+                <thead>
+                    <tr class="headings">
+                        <th class="hide">
+                            <input type="checkbox" id="check-all" class="flat"/>
+                        </th>
+                        <th class="column-title">Id Booster </th>
+                        <th class="column-title">Nom </th>
+                        <th class="column-title">Prénom(s) </th>
+                        <th class="column-title">Rôles </th>
+                        <th class="column-title">Promotion </th>
+                        <th class="column-title">Email </th>
+                        <th class="column-title">Date création </th>
+                        <th class="column-title">Statut </th>
+                        <th class="column-title no-link last"><span class="nobr">Action</span></th>
+                        <th class="bulk-actions" colspan="8">
+                            <a class="antoo" style="color:#fff; font-weight:500;"> <span class="action-cnt"> </span> <i class="fa fa-chevron-down"></i></a>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="u in pageUsers.content" ng-show="u.roleLib.id !== 1">
+                        <td class="a-center hide">
+                            <input class="flat" type="checkbox" name="table_records"/>
+                        </td>
+                        <td class="  hide">{{u.id}}</td>
+                        <td class=" ">{{u.idBooster}}</td>
+                        <td class=" ">{{u.nom}}</td>
+                        <td class=" ">{{u.prenom}}</td>
+                        <td class=" ">{{u.roleLib.libRole}}</td>
+                        <td class=" ">{{u.promotionId.codePromotion}}</td>
+                        <td class=" ">{{u.email}}</td>
+                        <td class=" ">{{u.dateCreation| date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                        <td class=" ">
+                            <span ng-show="u.etat === true" class="badge badge-success">
+                                Actif
+                            </span>
+                            <span ng-show="u.etat === false" class="badge btn-danger">
+                                Inactif
+                            </span>
+                        </td>
+                        <td class=" last">
+                            <button ng-show="u.etat === true" ng-click="afficherConfirmationModal(u)" class="btn btn-xs btn-danger">
+                                Désactiver
+                            </button>
+                            <button ng-show="u.etat === false" ng-click="afficherConfirmationModal(u)" class="btn btn-xs btn-success">
+                                Activer
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="container">
+                <ul class="row nav nav-pills pull-right">
+                    <li class="clickable" ng-class="{active:$index === page}" ng-repeat="p in pages track by $index">
+                        <a ng-click="goToPage($index)">{{$index}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="modal fade top10" id="confirm-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="txtCenter">{{confirmmsg}}</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                            <button type="button" ng-click="activerOuDesactiverUser();" class="btn btn-danger">Oui</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

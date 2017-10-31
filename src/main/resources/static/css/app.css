@@ -1,0 +1,86 @@
+.colorblue {
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;
+}
+
+.colorGreen {
+    color: #41AD49 !important;
+}
+
+.txtCenter {
+    text-align: center !important;
+}
+
+.margin5 {
+  margin: 5rem 0 2.2rem;
+}
+
+.marginTop15 {
+  margin-top: 15px !important;
+}
+
+.marginTop5 {
+  margin-top: 5px !important;
+}
+
+.marginTop22 {
+  margin-top: 22px !important;
+}
+
+.noBorderBottom {
+    border-bottom: none !important;
+}
+
+.width50 {
+  width: 50% !important;
+}
+
+.width10 {
+  width: 10% !important;
+}
+
+.top10 {
+  top: 10% !important;
+}
+
+.top35 {
+  top: 35% !important;
+}
+
+.top30 {
+  top: 30% !important;
+}
+
+.demo1 {
+    position: absolute;
+    top: 45%;
+    left: 35%;
+    margin-left: -15rem;
+    margin-top: -26.5rem;
+    width: 50%;
+    height: 53rem;
+    overflow: hidden;
+}
+
+.clickable {
+   cursor: pointer;
+}
+
+.badge-success {
+    background-color: #5cb85c !important;
+    border-color: #4cae4c !important;
+}
+
+.badge-primary {
+    background-color: #337ab7 !important;
+    border-color: #2e6da4 !important;
+}
+
+.login__input {
+    width: 90% !important;
+}
+
+
+.fontSize20 {
+    font-size: 20px !important;
+}
