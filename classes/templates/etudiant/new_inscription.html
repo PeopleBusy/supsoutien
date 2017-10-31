@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="menu/layout">
+    <head>
+        <title>Inscription</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <body>
+        <h2 layout:fragment="h2title">Nouvelle inscription</h2>
+        <div layout:fragment="content" class="x_content" ng-controller="etudiantInscriptionController">
+            <div class="modal fade top10" id="demande-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="txtCenter">{{confirmmsg}}</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                            <button type="button" ng-click="enregistrerDemandeSoutien();" class="btn btn-danger">Oui</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
+
+
+            <form class="row" ng-submit="registerCreneauByCoach();">
+                <div ng-show="error === true" class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Erreur! &nbsp;</strong> {{errormsg}}
+                </div>
+                <div class="form-group col-md-5">
+                    <label class="control-label">Choisissez une matière pour afficher les créneaux disponibles: </label>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-book"></i></div>
+                        <select id="mat" class="form-control" ng-change="onMatiereChange();" ng-model="idMatiere">
+                            <option ng-repeat="m in matieres" ng-value="{{m.id}}">{{m.codeMatiere}} - {{m.libMatiere}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-show="display === true">
+                    <button ng-click="afficherDemandeModal();" class="btn btn-success marginTop22" type="button">
+                        Faire une demande de soutien pour la matière {{btnmsg}}</button>
+                </div>
+                <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right">
+                    <button ng-click="actualiserPage();" class="btn btn-primary marginTop22" type="button">Actualiser</button>
+                </div>
+
+                <div ng-show="error === true" class="alert alert-danger alert-dismissible col-md-12" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Erreur! &nbsp;</strong> {{errormsg}}
+                </div>
+
+                <div class="row col-md-12 txtCenter" ng-show="pageCreneaux.content.length === 0">
+                    <div ng-show="error2 === true" class="alert alert-success alert-dismissible col-md-12" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Réussi! &nbsp;</strong> {{errormsg}}
+                    </div>
+                    <h3>Aucun créneau disponible</h3>
+                </div>
+
+                <div class="row col-md-12" ng-show="pageCreneaux.content.length > 0">
+                    <div ng-show="error2 === true" class="alert alert-success alert-dismissible col-md-12" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Réussi! &nbsp;</strong> {{errormsg}}
+                    </div>
+
+                    <div class="title_right">
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right hide">
+                            <button ng-click="actualiserListe();" class="btn btn-primary" type="button">Actualiser la liste</button>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-xs-12 form-group pull-right top_search hide">
+                            <form ng-submit="rechercherUserByIdBooster();">
+                                <div class="input-group">
+                                    <input type="number" ng-model="idBooster" class="form-control" placeholder="Recherche par Id bosster"/>
+                                    <span class="input-group-btn">
+                                        <button ng-submit="rechercherUserByIdBooster();" class="btn btn-default" type="submit">Ok</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-left">
+                            <select ng-change="displayElements();" class="form-control" ng-options="s.name for s in data.availableOptions track by s.id"
+                                    ng-model="data.selectedOption">
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <table id="" class="table table-striped responsive-utilities jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="hide">
+                                    <input type="checkbox" id="check-all" class="flat"/>
+                                </th>
+                                <th class="column-title hide">Id </th>
+                                <th class="column-title">Matière </th>
+                                <th class="column-title">Coach </th>
+                                <th class="column-title">Créneau </th>
+                                <th class="column-title hide">Type </th>
+                                <th class="column-title no-link last"><span class="nobr">Action</span></th>
+                                <th class="bulk-actions" colspan="8">
+                                    <a class="antoo" style="color:#fff; font-weight:500;"> <span class="action-cnt"> </span> <i class="fa fa-chevron-down"></i></a>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-repeat="c in pageCreneaux.content">
+                                <td class="a-center hide">
+                                    <input class="flat" type="checkbox" name="table_records"/>
+                                </td>
+                                <td class="  hide">{{c.id}}</td>
+                                <td class=" ">{{c.matiereId.codeMatiere}}</td>
+                                <td class=" ">{{c.coachId.nom}} {{c.coachId.prenom}}</td>
+                                <td class=" " ng-show="c.coachId !== null">{{c.dateHeureDebutSoutien| date:'dd/MM/yyyy HH:mm:ss'}} - au - 
+                                    {{c.dateHeureFinSoutien| date:'dd/MM/yyyy HH:mm:ss'}}
+                                </td>
+                                <td class=" hide" ng-show="c.coachId === null"></td>
+                                <td class=" hide" ng-show="c.coachId !== null">Séance crée par coach</td>
+                                <td class=" hide" ng-show="c.coachId === null">Demande crée par étudiant</td>
+                                <td class=" last">
+                                    <button class="btn btn-xs btn-success" ng-show="c.coachId !== null" ng-click="afficherConfirmationModal(c);">
+                                        <i class="fa fa-sign-in"></i> M'inscrire
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="container">
+                        <ul class="row nav nav-pills pull-right">
+                            <li class="clickable" ng-class="{active:$index === page}" ng-repeat="p in pages track by $index">
+                                <a ng-click="goToPage($index)">{{$index}}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="modal fade top10" id="confirm-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Confirmation</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h4 class="txtCenter">{{confirmmsg}}</h4>
+                                    <h4 class="txtCenter">{{confirmmsg2}}</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                                    <button type="button" ng-click="inscriptionEtudiantCreneau();" class="btn btn-danger">Oui</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </form>
+        </div>
+
+
+    </body>
+</html>

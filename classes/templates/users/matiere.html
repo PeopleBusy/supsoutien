@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="menu/layout">
+    <head>
+        <title>Matieres</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <body>
+        <h2 layout:fragment="h2title">Matières</h2>
+
+        <div layout:fragment="content" class="x_content table-responsive" ng-controller="listMatiereController">          
+
+            <div ng-show="error2 === true" class="alert alert-danger alert-dismissible col-md-12" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Erreur! &nbsp;</strong> {{errormsg}}
+            </div>
+
+            <div ng-show="error === true" class="alert alert-success alert-dismissible col-md-12" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Réussi! &nbsp;</strong> {{errormsg}}
+            </div>
+
+            <form class="col-md-12" style="margin-bottom: 15px;">
+                <div class="form-group col-md-2">
+                    <label class="control-label">Promotion : </label>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-university"></i></div>
+                        <select ng-model="filterPromotionCondition.promotion" required="true" class="form-control"
+                                ng-options="p.codePromotion for p in promotions">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Code Matière: </label>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-book"></i></div>
+                        <input ng-model="matiere.codeMatiere" type="text" class="form-control"  required="true" />
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label">Libellé Matière: </label>
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="fa fa-leanpub"></i></div>
+                        <input ng-model="matiere.libMatiere" type="text" class="form-control"  required="true" />
+                    </div>
+                </div>
+                <div class="col-md-2" style="margin-top: 25px;">
+                    <button type="submit" ng-click="afficherConfirmationModal();" class="btn btn-primary">Enregistrer</button>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 form-group pull-right"  style="margin-top: 25px;" ng-show="pageMatieres.content.length === 0">
+                    <button ng-click="chargerMatieres();" class="btn btn-success" type="button">Charger matières</button>
+                </div>
+            </form>
+
+            <div ng-show="pageMatieres.content.length === 0">
+                <h3>Aucune matière enrégistrée</h3>
+            </div>
+
+            <div ng-show="pageMatieres.content.length > 0">
+                <div class="title_right">
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right hide">
+                        <button ng-click="actualiserListe();" class="btn btn-primary" type="button">Actualiser la liste</button>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-12 form-group pull-right top_search hide">
+                        <form ng-submit="rechercherUserByIdBooster();">
+                            <div class="input-group">
+                                <input type="number" ng-model="idBooster" class="form-control" placeholder="Recherche par Id bosster"/>
+                                <span class="input-group-btn">
+                                    <button ng-submit="rechercherUserByIdBooster();" class="btn btn-default" type="submit">Ok</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-left">
+                        <select ng-change="displayElements();" class="form-control" ng-options="s.name for s in data.availableOptions track by s.id"
+                                ng-model="data.selectedOption">
+                        </select>
+                    </div>
+
+                </div>
+
+                <table id="" class="table table-striped responsive-utilities jambo_table bulk_action">
+                    <thead>
+                        <tr class="headings">
+                            <th class="hide">
+                                <input type="checkbox" id="check-all" class="flat"/>
+                            </th>
+                            <th class="column-title hide">Id </th>
+                            <th class="column-title">Code Matière </th>
+                            <th class="column-title">Libellé Matière </th>                       
+                            <th class="column-title">Promotion </th>
+                            <th class="column-title no-link last"><span class="nobr">Action</span></th>
+                            <th class="bulk-actions" colspan="8">
+                                <a class="antoo" style="color:#fff; font-weight:500;"> <span class="action-cnt"> </span> <i class="fa fa-chevron-down"></i></a>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="u in pageMatieres.content">
+                            <td class="a-center hide">
+                                <input class="flat" type="checkbox" name="table_records"/>
+                            </td>
+                            <td class="  hide">{{u.id}}</td>                       
+                            <td class=" ">{{u.codeMatiere}}</td>
+                            <td class=" ">{{u.libMatiere}}</td>
+                            <td class=" ">{{u.promotionId.codePromotion}}</td>
+                            <td class=" last">
+                                <button ng-click="recupererMatiere(u)" class="btn btn-xs btn-danger">
+                                    <i class="fa fa-pencil"></i> Modifier 
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="container">
+                    <ul class="row nav nav-pills pull-right">
+                        <li class="clickable" ng-class="{active:$index === page}" ng-repeat="p in pages track by $index">
+                            <a ng-click="goToPage($index)">{{$index}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal fade top10" id="confirm-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="txtCenter">{{confirmmsg}}</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                            <button type="button" ng-click="saveOrUpdateMatiere();" class="btn btn-danger">Oui</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+</html>

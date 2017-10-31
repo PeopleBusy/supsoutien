@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="menu/layout">
+    <head>
+        <title>Liste des inscriptions</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <body>
+        <h2 layout:fragment="h2title">Liste des inscriptions aux créneaux</h2>
+
+        <div layout:fragment="content" class="x_content table-responsive" ng-controller="listAllInscriptionsController">          
+            <div ng-show="pageCreneaux.content.length === 0">
+                <h3>Aucune inscription enrégistrée</h3>
+            </div>
+            <div ng-show="pageCreneaux.content.length > 0">
+                <div ng-show="error2 === true" class="alert alert-danger alert-dismissible col-md-12" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Erreur! &nbsp;</strong> {{errormsg}}
+                </div>
+
+                <div class="title_right">
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right hide">
+                        <button ng-click="actualiserListe();" class="btn btn-primary" type="button">Actualiser la liste</button>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-12 form-group pull-right top_search hide">
+                        <form ng-submit="rechercherUserByIdBooster();">
+                            <div class="input-group">
+                                <input type="number" ng-model="idBooster" class="form-control" placeholder="Recherche par Id bosster"/>
+                                <span class="input-group-btn">
+                                    <button ng-submit="rechercherUserByIdBooster();" class="btn btn-default" type="submit">Ok</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-left">
+                        <select ng-change="displayElements();" class="form-control" ng-options="s.name for s in data.availableOptions track by s.id"
+                                ng-model="data.selectedOption">
+                        </select>
+                    </div>
+
+                </div>
+
+                <div ng-show="error === true" class="alert alert-success alert-dismissible col-md-12" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Réussi! &nbsp;</strong> {{errormsg}}
+                </div>
+
+                <table id="" class="table table-bordered table-striped responsive-utilities jambo_table bulk_action">
+                    <thead>
+                        <tr class="headings">
+                            <th class="hide">
+                                <input type="checkbox" id="check-all" class="flat"/>
+                            </th>
+                            <th class="column-title hide">Id </th>
+                            <th class="column-title txtCenter">Coach IdBooster</th>
+                            <th class="column-title txtCenter">Coach </th>
+                            <th class="column-title txtCenter">Promotion </th>
+                            <th class="column-title txtCenter">Session </th>
+                            <th class="column-title txtCenter">Nombre inscrit(s) </th>
+                            <th class="column-title txtCenter">Nombre présent(s) </th>
+                            <th class="column-title txtCenter">Commentaire </th>
+                            <th class="column-title txtCenter">Action </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="c in pageCreneaux.content" ng-class="showRowClass(c);">
+                            <td class="a-center hide">
+                                <input class="flat" type="checkbox" name="table_records"/>
+                            </td>
+                            <td class="  hide">{{c.id}}</td>
+                            <td class=" txtCenter">{{c.coachId.idBooster}}</td>
+                            <td class=" txtCenter">
+                                {{c.coachId.nom}} {{c.coachId.prenom}}
+                            </td>
+                            <td class=" txtCenter">{{c.coachId.promotionId.codePromotion}}</td>
+                            <td class=" txtCenter">
+                                <p>{{c.matiereId.codeMatiere}}</p>
+                                <p>
+                                    {{c.dateHeureDebutSoutien| date:'dd/MM/yyyy HH:mm:ss'}} - à - 
+                                    {{c.dateHeureFinSoutien| date:'dd/MM/yyyy HH:mm:ss'}}
+                                </p>
+                            </td>
+                            <td class=" txtCenter"><span class="badge btn-info">{{c.nbInscrits}}</span></td>
+                            <td class=" txtCenter"><span class="badge btn-info">{{c.nbPresents}}</span></td>
+                            <td class=" txtCenter">
+                                <p>{{c.commentaire}}</p>
+                            </td>
+                            <td class=" last txtCenter">
+                                <button class="btn btn-xs btn-dark" ng-show="c.nbInscrits > 0" ng-click="afficherInscritModal(c);">
+                                    <i class="fa fa-users"></i> Voir inscrit(s)
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="container">
+                    <ul class="row nav nav-pills pull-right">
+                        <li class="clickable" ng-class="{active:$index === page}" ng-repeat="p in pages track by $index">
+                            <a ng-click="goToPage($index)">{{$index}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal fade top10" id="inscrit-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Liste des étudiants inscrits {{title}}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div ng-show="!(pageInscriptions| filter:nameText).length">
+                                    <h3 class="txtCenter">Aucun étudiant inscrit</h3>
+                                </div>
+                                <div ng-show="pageInscriptions.length > 0">
+                                    <table id="" class="table table-striped responsive-utilities jambo_table bulk_action">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th class="hide">
+                                                    <input type="checkbox" id="check-all" class="flat"/>
+                                                </th>
+                                                <th class="column-title txtCenter">Id Booster</th>
+                                                <th class="column-title txtCenter">Etudiant </th>
+                                                <th class="column-title txtCenter">Promotion </th>
+                                                <th class="column-title txtCenter">Date inscription </th>
+                                                <th class="column-title txtCenter"> Mail de confirmation </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr ng-repeat="i in pageInscriptions">
+                                                <td class=" txtCenter">{{i.etudiantId.idBooster}}</td>
+                                                <td class=" txtCenter">{{i.etudiantId.nom}} {{i.etudiantId.prenom}}</td>
+                                                <td class=" txtCenter">{{i.etudiantId.promotionId.codePromotion}}</td>
+                                                <td class=" txtCenter">{{i.dateHeureInscription| date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td class=" txtCenter">
+                                                    <p ng-bind-html="convertToHtml(i.contenuMailCoach)"></p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>                         
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

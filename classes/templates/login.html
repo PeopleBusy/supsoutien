@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Authentification</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+        <!--<link rel='stylesheet prefetch' href='http://fonts.googleapis.com/css?family=Open+Sans'/>-->
+        <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css" 
+              th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" type="text/css" href="../static/css/login/style.css" 
+              th:href="@{/css/login/style.css}"/>
+        <link rel="stylesheet" type="text/css" href="../static/css/app.css" 
+              th:href="@{/css/app.css}"/>
+
+    </head>
+    <body>
+        <div class="cont">
+            <div class="demo">
+                <div class="login">
+                    <div class="login__check"></div>
+                    <center>
+                        <br/><br/>
+                        <span style="color: white;font-size: 20px;font-weight: bold;">Veuillez vous authentifier !</span>                       
+                    </center>
+                    
+                    <div class="login__form">
+                        <span th:if="${param.error}" style="font-weight: bold; color: red;font-size: 13px;">
+                                Idbooster ou mot de passe incorrect!
+                        </span>
+                        
+                        <form method="POST" th:action="@{/login}">
+                            <div class="login__row">
+                                <svg class="login__icon name svg-icon" viewBox="0 0 20 20">
+                                <path d="M0,20 a10,8 0 0,1 20,0z M10,0 a4,4 0 0,1 0,8 a4,4 0 0,1 0,-8" />
+                                </svg>
+                                <input autofocus="true" required="true" name="id_booster" type="text" 
+                                       class="login__input_custom name" placeholder="Id booster"/>
+                            </div>
+                            <div class="login__row">
+                                <svg class="login__icon pass svg-icon" viewBox="0 0 20 20">
+                                <path d="M0,20 20,20 20,8 0,8z M10,13 10,16z M4,8 a6,8 0 0,1 12,0" />
+                                </svg>
+                                <input name="mot_passe" required="true" type="password" 
+                                       class="login__input_custom pass" placeholder="Mot de passe"/>
+                            </div>
+                            <button type="submit" class="login__submit">Connecter</button>
+                            <a th:href="@{/register}" class="btn btn-primary login__submit colorblue">Créer un compte</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

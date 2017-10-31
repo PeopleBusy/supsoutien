@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="menu/layout">
+    <head>
+        <title>Mes inscriptions</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <body>
+        <h2 layout:fragment="h2title">Mes inscriptions</h2>
+
+        <div layout:fragment="content" class="x_content table-responsive" ng-controller="listInscriptionEtudiantController">          
+            <div ng-show="pageInscriptions.content.length === 0">
+                <h3>Aucune inscription enrégistrée</h3>
+            </div>
+            <div ng-show="pageInscriptions.content.length > 0">
+                <div ng-show="error2 === true" class="alert alert-danger alert-dismissible col-md-12" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Erreur! &nbsp;</strong> {{errormsg}}
+                </div>
+
+                <div class="title_right">
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right hide">
+                        <button ng-click="actualiserListe();" class="btn btn-primary" type="button">Actualiser la liste</button>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-12 form-group pull-right top_search hide">
+                        <form ng-submit="rechercherUserByIdBooster();">
+                            <div class="input-group">
+                                <input type="number" ng-model="idBooster" class="form-control" placeholder="Recherche par Id bosster"/>
+                                <span class="input-group-btn">
+                                    <button ng-submit="rechercherUserByIdBooster();" class="btn btn-default" type="submit">Ok</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-12 form-group pull-left">
+                        <select ng-change="displayElements();" class="form-control" ng-options="s.name for s in data.availableOptions track by s.id"
+                                ng-model="data.selectedOption">
+                        </select>
+                    </div>
+
+                </div>
+
+                <div ng-show="error === true" class="alert alert-success alert-dismissible col-md-12" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Réussi! &nbsp;</strong> {{errormsg}}
+                </div>
+
+                <table id="" class="table table-striped responsive-utilities jambo_table bulk_action">
+                    <thead>
+                        <tr class="headings">
+                            <th class="hide">
+                                <input type="checkbox" id="check-all" class="flat"/>
+                            </th>
+                            <th class="column-title hide">Id </th>
+                            <th class="column-title">Matière </th>
+                            <th class="column-title">Coach </th>
+                            <th class="column-title">Créneau </th>
+                            <th class="column-title">Date inscription </th>
+                            <th class="column-title">Confirmation coach </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="c in pageInscriptions.content">
+                            <td class="a-center hide">
+                                <input class="flat" type="checkbox" name="table_records"/>
+                            </td>
+                            <td class="  hide">{{c.id}}</td>
+                            <td class=" ">{{c.creneauId.matiereId.codeMatiere}}</td>
+                            <td class=" ">{{c.creneauId.coachId.nom}} {{c.creneauId.coachId.prenom}}</td>
+                            <td class=" ">{{c.creneauId.dateHeureDebutSoutien| date:'dd/MM/yyyy HH:mm:ss'}} - au - 
+                                {{c.creneauId.dateHeureFinSoutien| date:'dd/MM/yyyy HH:mm:ss'}}
+                            </td>
+                            <td class=" ">{{c.dateHeureInscription| date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td class=" ">
+                                <span ng-show="c.confirmParCoach === 1" class="badge badge-success">
+                                    Oui
+                                </span>
+                                <span ng-show="c.confirmParCoach === 0" class="badge btn-danger">
+                                    Non
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="container">
+                    <ul class="row nav nav-pills pull-right">
+                        <li class="clickable" ng-class="{active:$index === page}" ng-repeat="p in pages track by $index">
+                            <a ng-click="goToPage($index)">{{$index}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="modal fade top10" id="confirm-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Confirmation</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4 class="txtCenter">{{confirmmsg}}</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                                <button type="button" ng-click="activerOuDesactiverUser();" class="btn btn-danger">Oui</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
