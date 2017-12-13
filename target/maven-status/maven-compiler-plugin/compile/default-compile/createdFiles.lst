@@ -26,8 +26,8 @@ org/rachidcorp/WebSecurityConfig.class
 org/rachidcorp/supsoutien/restservice/InscriptionEtudiantCreneauRestService.class
 org/rachidcorp/supsoutien/utils/QuickPasswordEncodingGenerator.class
 org/rachidcorp/supsoutien/repository/InscriptionEtudiantCreneauRepository.class
-org/rachidcorp/DataSourceConfig.class
 org/rachidcorp/supsoutien/repository/UserRepository.class
+org/rachidcorp/DataSourceConfig.class
 org/rachidcorp/supsoutien/repository/RoleRepository.class
 org/rachidcorp/supsoutien/restservice/DemandeSoutienRestService.class
 org/rachidcorp/supsoutien/metier/RoleMetier.class

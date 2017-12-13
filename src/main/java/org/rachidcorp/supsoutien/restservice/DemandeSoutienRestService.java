@@ -10,7 +10,6 @@ import java.util.Date;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import org.rachidcorp.SmtpMailSender;
-import org.rachidcorp.supsoutien.entities.CreneauMatiereCoach;
 import org.rachidcorp.supsoutien.entities.DemandeSoutien;
 import org.rachidcorp.supsoutien.entities.Matiere;
 import org.rachidcorp.supsoutien.entities.User;
@@ -68,7 +67,7 @@ public class DemandeSoutienRestService {
 
     public void sendDemandeSoutienMsgToCoach(DemandeSoutien ds, User coach, HttpServletRequest request) throws MessagingException {
         
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/login";
+        url = "http://supsoutien.sprnantes.tk/supsoutien/";
         
         subject = "Demande de séance de soutien " + ds.getMatiereId().getCodeMatiere();
         body = "Bonjour " + coach.getPrenom() + ", <br/><br/>";
@@ -81,7 +80,7 @@ public class DemandeSoutienRestService {
     
     public void sendDemandeSoutienMsgToEtudiant(User u, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {
         
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/login" + u.getIdBooster();
+        url = "http://supsoutien.sprnantes.tk/supsoutien/";
         
         subject = "Demande de séance de soutien " + m.getCodeMatiere() + " créee";
         body = "Bonjour " + u.getPrenom() + ", <br/><br/>";

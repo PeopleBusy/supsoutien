@@ -78,7 +78,7 @@ public class CreneauMatiereCoachRestService {
 
     public void sendCreneauMsgToStaff(User u, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {
 
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/login" + u.getIdBooster();
+        url = "http://supsoutien.sprnantes.tk/supsoutien/";
 
         subject = "Séance de soutien " + m.getCodeMatiere() + " créee";
         body = "Bonjour " + u.getPrenom() + ", <br/><br/>";
@@ -91,7 +91,7 @@ public class CreneauMatiereCoachRestService {
 
     public void sendCreneauMsgToEtudiant(User etud, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {
 
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/login";
+        url = "http://supsoutien.sprnantes.tk/supsoutien/";
 
         subject = "Séance de soutien " + m.getCodeMatiere() + " créee";
         body = "Bonjour " + etud.getPrenom() + ", <br/><br/>";

@@ -78,7 +78,7 @@ public class UserRestService {
 
     public void sendConfirmationMsgToUser(User u, HttpServletRequest request) throws MessagingException {
 
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/api/users/activerCompte/"+u.getIdBooster();
+        url = "http://supsoutien.sprnantes.tk/supsoutien/" +"api/users/activerCompte/"+u.getIdBooster();
         subject = "Compte supsoutien crée";
         body = "Bonjour " + u.getPrenom() + ", <br/><br/>";
         body += "Vous avez crée un compte sur la plateforme Supsoutien.</br></br>";
@@ -95,7 +95,7 @@ public class UserRestService {
         
         um.updateUser(u);
         
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/login";
+        url = "http://supsoutien.sprnantes.tk/supsoutien/";
         
         return new RedirectView(url);
     }

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.rachidcorp.SmtpMailSender;
 import org.rachidcorp.supsoutien.entities.CreneauMatiereCoach;
 import org.rachidcorp.supsoutien.entities.InscriptionEtudiantCreneau;
-import org.rachidcorp.supsoutien.entities.Matiere;
 import org.rachidcorp.supsoutien.entities.User;
 import org.rachidcorp.supsoutien.metier.CreneauMatiereCoachMetier;
 import org.rachidcorp.supsoutien.metier.InscriptionEtudiantCreneauMetier;
@@ -63,7 +62,7 @@ public class InscriptionEtudiantCreneauRestService {
     
     public void sendInscriptionMsgToCoach(User et, CreneauMatiereCoach c, HttpServletRequest request) throws MessagingException {
         
-        url = request.getRequestURL().toString().split("supsoutien")[0] +"supsoutien/login";
+        url = "http://supsoutien.sprnantes.tk/supsoutien/";
         
         subject = "Demande d'inscription à la séance de soutien " + c.getMatiereId().getCodeMatiere();
         body = "Bonjour " + c.getCoachId().getPrenom() + ", <br/><br/>";
