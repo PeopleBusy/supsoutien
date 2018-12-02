@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.rachidcorp.supsoutien.metier.RoleMetier;
+import org.rachidcorp.supsoutien.utils.Helpers;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -51,7 +52,7 @@ public class UserRestService {
 
     private String body = "";
     
-    private String url = "";
+    private String url = Helpers.APP_URL;
 
     BCryptPasswordEncoder passwordEncoder;
 
@@ -78,7 +79,7 @@ public class UserRestService {
 
     public void sendConfirmationMsgToUser(User u, HttpServletRequest request) throws MessagingException {
 
-        url = "http://supsoutien.sprnantes.tk/supsoutien/" +"api/users/activerCompte/"+u.getIdBooster();
+        url += "api/users/activerCompte/"+u.getIdBooster();
         subject = "Compte supsoutien crée";
         body = "Bonjour " + u.getPrenom() + ", <br/><br/>";
         body += "Vous avez crée un compte sur la plateforme Supsoutien.</br></br>";
@@ -94,8 +95,6 @@ public class UserRestService {
         u.setEtat(true);
         
         um.updateUser(u);
-        
-        url = "http://supsoutien.sprnantes.tk/supsoutien/";
         
         return new RedirectView(url);
     }

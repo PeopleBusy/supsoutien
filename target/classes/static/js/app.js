@@ -1,6 +1,9 @@
 var app = angular.module("MyApp", ['ngCookies']);
 
 var url = 'http://supsoutien.sprnantes.tk/supsoutien/api';
+var redirect_url = 'http://supsoutien.sprnantes.tk/supsoutien/login';
+//var url = 'http://localhost:8099/supsoutien/api';
+//var redirect_url = 'http://localhost:8099/supsoutien/login';
 
 function afficherLoadingModal() {
     $('#loading-modal-sm').modal({
@@ -74,7 +77,7 @@ app.controller("registerController", function ($scope, $http, $cookieStore, $loc
     $scope.errormsg = "";
     $scope.successmsg = "";
     
-    url = 'http://supsoutien.sprnantes.tk/supsoutien/api';
+    //url = 'http://supsoutien.sprnantes.tk/supsoutien/api';
 
     $scope.getAllPromotions = function () {
         $http.get(url + "/promotions")
@@ -114,7 +117,7 @@ app.controller("registerController", function ($scope, $http, $cookieStore, $loc
 
     $scope.fermerSuccessModal = function () {
         fermerSuccessModal();
-        window.location.href = 'http://supsoutien.sprnantes.tk/supsoutien/login';
+        window.location.href = redirect_url;
     };
 
     $scope.registerUser = function () {
@@ -233,7 +236,7 @@ app.controller("registerController", function ($scope, $http, $cookieStore, $loc
 
 app.controller("loggedUserController", function ($scope, $http, $cookieStore, $location) {
     
-    url = 'http://supsoutien.sprnantes.tk/supsoutien/api';
+    //url = 'http://supsoutien.sprnantes.tk/supsoutien/api';
     
     $scope.loggeduser = {};
 

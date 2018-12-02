@@ -18,6 +18,7 @@ import org.rachidcorp.supsoutien.metier.CreneauMatiereCoachMetier;
 import org.rachidcorp.supsoutien.metier.InscriptionEtudiantCreneauMetier;
 import org.rachidcorp.supsoutien.metier.MatiereMetier;
 import org.rachidcorp.supsoutien.metier.UserMetier;
+import org.rachidcorp.supsoutien.utils.Helpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -56,14 +57,11 @@ public class InscriptionEtudiantCreneauRestService {
 
     private String body = "";
     
-    private String url = "";
+    private final String url = Helpers.APP_URL;
     
     private SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
     
     public void sendInscriptionMsgToCoach(User et, CreneauMatiereCoach c, HttpServletRequest request) throws MessagingException {
-        
-        url = "http://supsoutien.sprnantes.tk/supsoutien/";
-        
         subject = "Demande d'inscription à la séance de soutien " + c.getMatiereId().getCodeMatiere();
         body = "Bonjour " + c.getCoachId().getPrenom() + ", <br/><br/>";
         body += "L'étudiant <span style='font-weight: bold;'>" + et.getNom() + " " + et.getPrenom() + "</span> s'est inscrit à";

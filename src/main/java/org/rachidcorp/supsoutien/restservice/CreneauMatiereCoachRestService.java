@@ -20,6 +20,7 @@ import org.rachidcorp.supsoutien.metier.DemandeSoutienMetier;
 import org.rachidcorp.supsoutien.metier.InscriptionEtudiantCreneauMetier;
 import org.rachidcorp.supsoutien.metier.MatiereMetier;
 import org.rachidcorp.supsoutien.metier.UserMetier;
+import org.rachidcorp.supsoutien.utils.Helpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -63,7 +64,7 @@ public class CreneauMatiereCoachRestService {
 
     private String body = "";
     
-    private String url = "";
+    private String url = Helpers.APP_URL;
 
     SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
 
@@ -77,9 +78,6 @@ public class CreneauMatiereCoachRestService {
     }
 
     public void sendCreneauMsgToStaff(User u, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {
-
-        url = "http://supsoutien.sprnantes.tk/supsoutien/";
-
         subject = "Séance de soutien " + m.getCodeMatiere() + " créee";
         body = "Bonjour " + u.getPrenom() + ", <br/><br/>";
         body += "Le coach " + coach.getNom() + " " + coach.getPrenom() + " a crée une séance de soutien pour la matière " + m.getCodeMatiere();
@@ -90,9 +88,6 @@ public class CreneauMatiereCoachRestService {
     }
 
     public void sendCreneauMsgToEtudiant(User etud, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {
-
-        url = "http://supsoutien.sprnantes.tk/supsoutien/";
-
         subject = "Séance de soutien " + m.getCodeMatiere() + " créee";
         body = "Bonjour " + etud.getPrenom() + ", <br/><br/>";
         body += "Le coach " + coach.getNom() + " " + coach.getPrenom() + " a crée une séance de soutien pour la matière " + m.getCodeMatiere();

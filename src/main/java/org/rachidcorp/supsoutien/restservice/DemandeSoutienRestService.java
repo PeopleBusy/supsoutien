@@ -18,6 +18,7 @@ import org.rachidcorp.supsoutien.metier.DemandeSoutienMetier;
 import org.rachidcorp.supsoutien.metier.InscriptionEtudiantCreneauMetier;
 import org.rachidcorp.supsoutien.metier.MatiereMetier;
 import org.rachidcorp.supsoutien.metier.UserMetier;
+import org.rachidcorp.supsoutien.utils.Helpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -60,15 +61,12 @@ public class DemandeSoutienRestService {
 
     private String body = "";
     
-    private String url = "";
+    private final String url = Helpers.APP_URL;
     
     private SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
 
 
     public void sendDemandeSoutienMsgToCoach(DemandeSoutien ds, User coach, HttpServletRequest request) throws MessagingException {
-        
-        url = "http://supsoutien.sprnantes.tk/supsoutien/";
-        
         subject = "Demande de séance de soutien " + ds.getMatiereId().getCodeMatiere();
         body = "Bonjour " + coach.getPrenom() + ", <br/><br/>";
         body += "Vous avez été assigné une demande de soutien pour la matière " + ds.getMatiereId().getCodeMatiere();
@@ -78,10 +76,7 @@ public class DemandeSoutienRestService {
         sms.sendWithoutCC(coach.getEmail(), subject, body);
     }
     
-    public void sendDemandeSoutienMsgToEtudiant(User u, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {
-        
-        url = "http://supsoutien.sprnantes.tk/supsoutien/";
-        
+    public void sendDemandeSoutienMsgToEtudiant(User u, Matiere m, User coach, Date dtdeb, Date dtfin, HttpServletRequest request) throws MessagingException {        
         subject = "Demande de séance de soutien " + m.getCodeMatiere() + " créee";
         body = "Bonjour " + u.getPrenom() + ", <br/><br/>";
         body += "Le coach " + coach.getNom() + " " + coach.getPrenom() + " a crée une séance de soutien pour la matière " + m.getCodeMatiere();
@@ -118,14 +113,6 @@ public class DemandeSoutienRestService {
         }
         
         ds = dsm.saveDemandeSoutien(ds);
-//        
-//        CreneauMatiereCoach c = new CreneauMatiereCoach();
-//        c.setMatiereId(m);
-//        c.setValiderParCoachFinSession(0);
-//        c.setValiderParStaff(1);
-//        
-//        cm.saveCreneauMatiereCoach(c);
-        
         
         return ds;
 
